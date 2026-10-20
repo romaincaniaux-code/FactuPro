@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Remise{% endblock %}
+
+{% block body %}
+    <h1>Create new Remise</h1>
+
+    {{ include('remise/_form.html.twig') }}
+
+    <a href="{{ path('app_remise_index') }}">back to list</a>
+{% endblock %}
