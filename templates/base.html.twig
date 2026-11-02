@@ -1,25 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-        {% endblock %}
-
-        {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
-        {% if frankenphp_hot_reload %}
-        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
-        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
-        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
-        {% endif %}
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}FactuPro{% endblock %}</title>
+        <style>
+            body { font-family: sans-serif; margin: 0; background: #f4f6f8; color: #1b2430; }
+            nav { background: #0f6b63; padding: 12px 24px; display: flex; justify-content: space-between; }
+            nav a { color: #fff; text-decoration: none; margin-right: 20px; font-weight: bold; }
+            nav span { color: #fff; margin-right: 20px; }
+            main { max-width: 1000px; margin: 24px auto; padding: 0 24px; }
+            table { width: 100%; border-collapse: collapse; background: #fff; }
+            th, td { padding: 10px; border-bottom: 1px solid #dce1e7; text-align: left; }
+            .btn, button { background: #0f6b63; color: #fff; border: 0; padding: 8px 14px; border-radius: 4px; text-decoration: none; cursor: pointer; font-size: 14px; }
+            .btn-danger { background: #b3261e; }
+            form div { margin-bottom: 12px; }
+            label { display: block; font-weight: bold; margin-bottom: 4px; }
+            input { padding: 6px; width: 300px; }
+            form ul { color: #b3261e; margin: 4px 0; padding-left: 18px; }
+        </style>
     </head>
     <body>
-        {% block body %}
-        
-        {% endblock %}
+        {# ! le menu ne s'affiche que si un utilisateur est connecté (app.user) #}
+        <nav>
+            <div>
+                {% if app.user %}
+                    <a href="{{ path('app_client_index') }}">Clients</a>
+                    <a href="{{ path('app_produit_index') }}">Produits</a>
+                    <a href="{{ path('app_remise_index') }}">Remises</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_register') }}">Créer un compte</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div>
+                {% if app.user %}
+                    <span>{{ app.user.userIdentifier }}</span>
+                    <a href="{{ path('app_logout') }}">Déconnexion</a>
+                {% endif %}
+            </div>
+        </nav>
+        <main>
+            {# ! messages de confirmation (addFlash dans les contrôleurs) #}
+            {% for message in app.flashes('success') %}
+                <p style="background: #e2f3e8; padding: 10px;">{{ message }}</p>
+            {% endfor %}
+
+            {% block body %}{% endblock %}
+        </main>
     </body>
 </html>
