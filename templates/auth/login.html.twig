@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <h1>Connexion</h1>
+
+    {# ! error contient l'erreur de connexion éventuelle (mauvais email ou mot de passe) #}
+    {% if error %}
+        <p style="color: #b3261e;">Email ou mot de passe incorrect.</p>
+    {% endif %}
+
+    {# ! les champs _username et _password sont ceux attendus par le pare-feu #}
+    <form method="post">
+        <div>
+            <label for="username">Email</label>
+            <input type="email" id="username" name="_username" value="{{ last_username }}" required autofocus>
+        </div>
+        <div>
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="_password" required>
+        </div>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        <button class="btn" type="submit">Se connecter</button>
+    </form>
+{% endblock %}
